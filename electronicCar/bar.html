@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>D3.js Bar Chart Example with Tooltip</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <style>
+        .bar {
+            fill: steelblue;
+        }
+        .bar:hover {
+            fill: orange;
+        }
+        .axis-label {
+            font-size: 14px;
+        }
+        .tooltip {
+            position: absolute;
+            text-align: center;
+            width: 60px;
+            height: 28px;
+            padding: 2px;
+            font: 12px sans-serif;
+            background: lightsteelblue;
+            border: 0px;
+            border-radius: 8px;
+            pointer-events: none;
+            opacity: 0;
+        }
+    </style>
+</head>
+<body>
+    <script>
+        // 데이터 설정
+        const data = [
+            { region: "서울", value: 41140 },
+            { region: "인천", value: 12942 },
+            { region: "경기", value: 40239 },
+            { region: "강원", value: 8042 },
+            { region: "충북", value: 8184 },
+            { region: "충남", value: 10015 },
+            { region: "대전", value: 7675 },
+            { region: "세종", value: 1879 },
+            { region: "경북", value: 11269 },
+            { region: "대구", value: 16169 },
+            { region: "전북", value: 7389 },
+            { region: "전남", value: 8837 },
+            { region: "광주", value: 5204 },
+            { region: "경남", value: 12725 },
+            { region: "부산", value: 12501 },
+            { region: "울산", value: 3180 },
+            { region: "제주", value: 25580 }
+        ];
+
+        // SVG 캔버스 크기 설정
+        const width = 800;
+        const height = 400;
+        const margin = { top: 20, right: 20, bottom: 70, left: 70 };
+
+        // SVG 요소 생성
+        const svg = d3.select("body")
+            .append("svg")
+            .attr("width", width)
+            .attr("height", height);
+
+        // x 스케일 설정 (막대 간격)
+        const x = d3.scaleBand()
+            .domain(data.map(d => d.region))
+            .range([margin.left, width - margin.right])
+            .padding(0.1);
+
+        // y 스케일 설정 (막대 높이)
+        const y = d3.scaleLinear()
+            .domain([0, d3.max(data, d => d.value)]).nice()
+            .range([height - margin.bottom, margin.top]);
+
+        // x축 생성
+        const xAxis = g => g
+            .attr("transform", `translate(0,${height - margin.bottom})`)
+            .call(d3.axisBottom(x))
+            .selectAll("text")
+            .attr("transform", "rotate(-45)")
+            .style("text-anchor", "end");
+
+        // y축 생성
+        const yAxis = g => g
+            .attr("transform", `translate(${margin.left},0)`)
+            .call(d3.axisLeft(y))
+            .append("text")
+            .attr("x", -margin.left)
+            .attr("y", margin.top - 10)
+            .attr("fill", "black")
+            .attr("text-anchor", "start")
+            .attr("class", "axis-label")
+            .text("Value");
+
+        // SVG 요소에 x축 추가
+        svg.append("g")
+            .call(xAxis);
+
+        // SVG 요소에 y축 추가
+        svg.append("g")
+            .call(yAxis);
+
+        // 툴팁 생성
+        const tooltip = d3.select("body").append("div")
+            .attr("class", "tooltip");
+
+        // 막대 생성
+        svg.selectAll(".bar")
+            .data(data)
+            .enter()
+            .append("rect")
+            .attr("class", "bar")
+            .attr("x", d => x(d.region))
+            .attr("y", d => y(d.value))
+            .attr("width", x.bandwidth())
+            .attr("height", d => y(0) - y(d.value))
+            .on("mouseover", function(event, d) {
+                tooltip.transition()
+                    .duration(200)
+                    .style("opacity", .9);
+                tooltip.html(d.value)
+                    .style("left", (event.pageX + 5) + "px")
+                    .style("top", (event.pageY - 28) + "px");
+            })
+            .on("mouseout", function(d) {
+                tooltip.transition()
+                    .duration(500)
+                    .style("opacity", 0);
+            });
+    </script>
+</body>
+</html>

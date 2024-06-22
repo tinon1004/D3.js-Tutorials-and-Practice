@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>D3.js Scatter Plot (No Tooltip)</title>
+    <!-- D3.js 라이브러리 추가 -->
+    <script src="https://d3js.org/d3.v6.min.js"></script>
+    <!-- CSS 스타일링 -->
+    <style>
+        .dot {
+            fill: steelblue;
+            stroke: #000;
+        }
+    </style>
+</head>
+<body>
+    <script>
+        // 데이터 설정
+        const data = [
+            {x: 30, y: 20}, {x: 50, y: 90}, {x: 80, y: 50},
+            {x: 90, y: 33}, {x: 100, y: 95}, {x: 110, y: 65}
+        ];
+
+        // SVG 캔버스 설정
+        const width = 500;
+        const height = 300;
+        const margin = {top: 20, right: 20, bottom: 30, left: 40};
+
+        // SVG 요소 생성 및 위치 조정
+        const svg = d3.select("body").append("svg")
+                      .attr("width", width + margin.left + margin.right)
+                      .attr("height", height + margin.top + margin.bottom)
+                      .append("g")
+                      .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+        // X축 및 Y축 스케일 설정
+        const x = d3.scaleLinear()
+                    .domain([0, d3.max(data, d => d.x)]) // X축 도메인 설정
+                    .range([0, width]); // X축 범위 설정
+
+        const y = d3.scaleLinear()
+                    .domain([0, d3.max(data, d => d.y)]) // Y축 도메인 설정
+                    .range([height, 0]); // Y축 범위 설정
+
+        // X축과 Y축 추가
+        svg.append("g")
+           .attr("transform", "translate(0," + height + ")")
+           .call(d3.axisBottom(x)); // X축 추가
+
+        svg.append("g")
+           .call(d3.axisLeft(y)); // Y축 추가
+
+        // 산포도 점 추가
+        svg.selectAll("circle")
+           .data(data)
+           .enter().append("circle")
+           .attr("class", "dot") // 점의 클래스 설정
+           .attr("cx", d => x(d.x)) // X 좌표 설정
+           .attr("cy", d => y(d.y)) // Y 좌표 설정
+           .attr("r", 5); // 점의 반지름 설정
+    </script>
+</body>
+</html>
