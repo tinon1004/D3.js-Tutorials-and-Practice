@@ -28,6 +28,8 @@
         const margin = {top: 20, right: 20, bottom: 30, left: 40};
 
         // SVG 요소 생성 및 위치 조정
+        //const svg = d3.select("body").append("svg")...: D3.js를 사용하여 body 요소에 svg 요소를 추가합니다.
+        //svg 요소의 너비와 높이를 설정하고, 내부에 g 요소를 추가하여 변환(transform)을 통해 여백을 고려한 위치로 이동시킵니다.
         const svg = d3.select("body").append("svg")
                       .attr("width", width + margin.left + margin.right)
                       .attr("height", height + margin.top + margin.bottom)
@@ -35,6 +37,8 @@
                       .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
         // X축 및 Y축 스케일 설정
+        //const x = d3.scaleLinear()...: X축의 스케일을 설정합니다. domain은 데이터의 최소값과 최대값을 설정하고, range는 실제 SVG 요소 내에서의 범위를 설정합니다.
+        //const y = d3.scaleLinear()...: Y축의 스케일을 설정합니다. domain은 데이터의 최소값과 최대값을 설정하고, range는 실제 SVG 요소 내에서의 범위를 설정합니다.
         const x = d3.scaleLinear()
                     .domain([0, d3.max(data, d => d.x)]) // X축 도메인 설정
                     .range([0, width]); // X축 범위 설정
@@ -48,10 +52,18 @@
            .attr("transform", "translate(0," + height + ")")
            .call(d3.axisBottom(x)); // X축 추가
 
+        //svg.append("g")...: X축과 Y축을 g 요소에 추가합니다. X축은 아래쪽에 위치하도록 변환을 설정하고, 
+        //d3.axisBottom(x)와 d3.axisLeft(y)를 사용하여 각각의 축을 설정합니다.
         svg.append("g")
            .call(d3.axisLeft(y)); // Y축 추가
 
         // 산포도 점 추가
+        
+        //svg.selectAll("circle")...: 산포도 점을 추가합니다. data(data)로 데이터를 바인딩하고, enter().append("circle")로 circle 요소를 추가합니다.
+        // .attr("class", "dot"): 점의 클래스를 설정하여 스타일링을 적용합니다.
+        // .attr("cx", d => x(d.x)): 각 점의 X 좌표를 데이터 값에 따라 설정합니다.
+        // .attr("cy", d => y(d.y)): 각 점의 Y 좌표를 데이터 값에 따라 설정합니다.
+        // .attr("r", 5): 점의 반지름을 5로 설정합니다.
         svg.selectAll("circle")
            .data(data)
            .enter().append("circle")
