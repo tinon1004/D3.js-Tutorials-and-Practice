@@ -1,39 +1,39 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>D3.js Bar Chart Example with Tooltip</title>
-    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <meta charset="UTF-8"> <!-- 문서 인코딩 설정 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- 반응형 스케일링 설정 -->
+    <title>D3.js Bar Chart Example with Tooltip</title> <!-- 문서 제목 설정 -->
+    <script src="https://d3js.org/d3.v7.min.js"></script> <!-- D3.js 라이브러리 로드 -->
     <style>
         .bar {
-            fill: steelblue;
+            fill: steelblue; /* 막대 색상 설정 */
         }
         .bar:hover {
-            fill: orange;
+            fill: orange; /* 막대 호버 시 색상 설정 */
         }
         .axis-label {
-            font-size: 14px;
+            font-size: 14px; /* 축 레이블 폰트 크기 설정 */
         }
         .tooltip {
-            position: absolute;
-            text-align: center;
-            width: auto;
-            height: auto;
-            padding: 2px;
-            font: 12px sans-serif;
-            background: lightsteelblue;
-            border: 0px;
-            border-radius: 8px;
-            pointer-events: none;
-            opacity: 0;
+            position: absolute; /* 절대 위치 지정 */
+            text-align: center; /* 텍스트 가운데 정렬 */
+            width: auto; /* 자동 너비 설정 */
+            height: auto; /* 자동 높이 설정 */
+            padding: 2px; /* 내부 여백 설정 */
+            font: 12px sans-serif; /* 폰트 설정 */
+            background: lightsteelblue; /* 배경색 설정 */
+            border: 0px; /* 테두리 없음 */
+            border-radius: 8px; /* 테두리 둥글게 설정 */
+            pointer-events: none; /* 이벤트 무시 */
+            opacity: 0; /* 초기에는 투명하게 설정 */
         }
     </style>
 </head>
 <body>
     <script>
         // 데이터 설정
-        const data = [
+        const data = [ /* 데이터 배열 선언 */
             { region: "서울", value: 41140 },
             { region: "인천", value: 12942 },
             { region: "경기", value: 40239 },
@@ -59,76 +59,76 @@
         const margin = { top: 20, right: 20, bottom: 70, left: 70 };
 
         // SVG 요소 생성
-        const svg = d3.select("body")
-            .append("svg")
-            .attr("width", width)
-            .attr("height", height);
+        const svg = d3.select("body") /* body 요소에 SVG 추가 */
+            .append("svg") /* SVG 요소 추가 */
+            .attr("width", width) /* 너비 설정 */
+            .attr("height", height); /* 높이 설정 */
 
         // x 스케일 설정 (막대 간격)
-        const x = d3.scaleBand()
-            .domain(data.map(d => d.region))
-            .range([margin.left, width - margin.right])
-            .padding(0.1);
+        const x = d3.scaleBand() /* 막대 간격 스케일 설정 */
+            .domain(data.map(d => d.region)) /* 도메인 설정 */
+            .range([margin.left, width - margin.right]) /* 범위 설정 */
+            .padding(0.1); /* 패딩 설정 */
 
         // y 스케일 설정 (막대 높이)
-        const y = d3.scaleLinear()
-            .domain([0, d3.max(data, d => d.value)]).nice()
-            .range([height - margin.bottom, margin.top]);
+        const y = d3.scaleLinear() /* 선형 스케일 설정 */
+            .domain([0, d3.max(data, d => d.value)]).nice() /* 도메인 설정 */
+            .range([height - margin.bottom, margin.top]); /* 범위 설정 */
 
         // x축 생성
-        const xAxis = g => g
-            .attr("transform", `translate(0,${height - margin.bottom})`)
-            .call(d3.axisBottom(x))
-            .selectAll("text")
-            .attr("transform", "rotate(-45)")
-            .style("text-anchor", "end");
+        const xAxis = g => g /* x축 생성 함수 */
+            .attr("transform", `translate(0,${height - margin.bottom})`) /* 위치 설정 */
+            .call(d3.axisBottom(x)) /* 아래쪽 축 추가 */
+            .selectAll("text") /* 텍스트 선택 */
+            .attr("transform", "rotate(-45)") /* 회전 설정 */
+            .style("text-anchor", "end"); /* 정렬 설정 */
 
         // y축 생성
-        const yAxis = g => g
-            .attr("transform", `translate(${margin.left},0)`)
-            .call(d3.axisLeft(y))
-            .append("text")
-            .attr("x", -margin.left)
-            .attr("y", margin.top - 10)
-            .attr("fill", "black")
-            .attr("text-anchor", "start")
-            .attr("class", "axis-label")
-            .text("Value");
+        const yAxis = g => g /* y축 생성 함수 */
+            .attr("transform", `translate(${margin.left},0)`) /* 위치 설정 */
+            .call(d3.axisLeft(y)) /* 왼쪽 축 추가 */
+            .append("text") /* 텍스트 요소 추가 */
+            .attr("x", -margin.left) /* x 좌표 설정 */
+            .attr("y", margin.top - 10) /* y 좌표 설정 */
+            .attr("fill", "black") /* 색상 설정 */
+            .attr("text-anchor", "start") /* 정렬 설정 */
+            .attr("class", "axis-label") /* 클래스 설정 */
+            .text("Value"); /* 텍스트 내용 설정 */
 
         // SVG 요소에 x축 추가
-        svg.append("g")
-            .call(xAxis);
+        svg.append("g") /* 그룹 요소 추가 */
+            .call(xAxis); /* x축 호출 */
 
         // SVG 요소에 y축 추가
-        svg.append("g")
-            .call(yAxis);
+        svg.append("g") /* 그룹 요소 추가 */
+            .call(yAxis); /* y축 호출 */
 
         // 툴팁 생성
-        const tooltip = d3.select("body").append("div")
-            .attr("class", "tooltip");
+        const tooltip = d3.select("body").append("div") /* body에 div 요소 추가 */
+            .attr("class", "tooltip"); /* 클래스 설정 */
 
         // 막대 생성
-        svg.selectAll(".bar")
-            .data(data)
-            .enter()
-            .append("rect")
-            .attr("class", "bar")
-            .attr("x", d => x(d.region))
-            .attr("y", d => y(d.value))
-            .attr("width", x.bandwidth())
-            .attr("height", d => y(0) - y(d.value))
-            .on("mouseover", function(event, d) {
-                tooltip.transition()
-                    .duration(200)
-                    .style("opacity", .9);
-                tooltip.html(`${d.region}<br>${d.value}`)
-                    .style("left", (event.pageX + 5) + "px")
-                    .style("top", (event.pageY - 28) + "px");
+        svg.selectAll(".bar") /* 모든 막대 선택 */
+            .data(data) /* 데이터 바인딩 */
+            .enter() /* 데이터 추가 */
+            .append("rect") /* 사각형 요소 추가 */
+            .attr("class", "bar") /* 클래스 설정 */
+            .attr("x", d => x(d.region)) /* x 좌표 설정 */
+            .attr("y", d => y(d.value)) /* y 좌표 설정 */
+            .attr("width", x.bandwidth()) /* 너비 설정 */
+            .attr("height", d => y(0) - y(d.value)) /* 높이 설정 */
+            .on("mouseover", function(event, d) { /* 마우스 오버 이벤트 설정 */
+                tooltip.transition() /* 툴팁 전환 설정 */
+                    .duration(200) /* 지속 시간 설정 */
+                    .style("opacity", .9); /* 불투명도 설정 */
+                tooltip.html(`지역: ${d.region}<br>값: ${d.value}`) /* 툴팁 내용 설정 */
+                    .style("left", (event.pageX + 5) + "px") /* 위치 설정 */
+                    .style("top", (event.pageY - 28) + "px"); /* 위치 설정 */
             })
-            .on("mouseout", function(d) {
-                tooltip.transition()
-                    .duration(500)
-                    .style("opacity", 0);
+            .on("mouseout", function(d) { /* 마우스 아웃 이벤트 설정 */
+                tooltip.transition() /* 툴팁 전환 설정 */
+                    .duration(500) /* 지속 시간 설정 */
+                    .style("opacity", 0); /* 투명하게 설정 */
             });
     </script>
 </body>
